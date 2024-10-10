@@ -24,7 +24,7 @@ import ru.tech.imageresizershrinker.core.domain.transformation.Transformation
 import ru.tech.imageresizershrinker.core.filters.domain.model.Filter
 
 internal class GothamFilter(
-    override val value: Unit = Unit
+    override val value: Unit = Unit,
 ) : Transformation<Bitmap>, Filter.Gotham {
 
     override val cacheKey: String
@@ -32,7 +32,7 @@ internal class GothamFilter(
 
     override suspend fun transform(
         input: Bitmap,
-        size: IntegerSize
+        size: IntegerSize,
     ): Bitmap = Trickle.gotham(input)
 
 }

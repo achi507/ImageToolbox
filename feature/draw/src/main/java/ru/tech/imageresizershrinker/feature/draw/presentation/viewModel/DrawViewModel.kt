@@ -31,6 +31,7 @@ import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import ru.tech.imageresizershrinker.core.domain.dispatchers.DispatchersHolder
 import ru.tech.imageresizershrinker.core.domain.image.ImageCompressor
@@ -49,6 +50,7 @@ import ru.tech.imageresizershrinker.core.filters.domain.model.Filter
 import ru.tech.imageresizershrinker.core.settings.domain.SettingsProvider
 import ru.tech.imageresizershrinker.core.ui.utils.BaseViewModel
 import ru.tech.imageresizershrinker.core.ui.utils.state.update
+import ru.tech.imageresizershrinker.core.ui.widget.modifier.HelperGridParams
 import ru.tech.imageresizershrinker.feature.draw.domain.DrawBehavior
 import ru.tech.imageresizershrinker.feature.draw.domain.DrawLineStyle
 import ru.tech.imageresizershrinker.feature.draw.domain.DrawMode
@@ -121,6 +123,10 @@ class DrawViewModel @Inject constructor(
     private val _saveExif: MutableState<Boolean> = mutableStateOf(false)
     val saveExif: Boolean by _saveExif
 
+    private val _helperGridParams: MutableState<HelperGridParams> =
+        mutableStateOf(HelperGridParams())
+    val helperGridParams: HelperGridParams by _helperGridParams
+
     init {
         viewModelScope.launch {
             val settingsState = settingsProvider.getSettingsState()
@@ -132,6 +138,13 @@ class DrawViewModel @Inject constructor(
                 DrawOnBackgroundParams::class
             )
             _drawOnBackgroundParams.update { params }
+        }
+        viewModelScope.launch {
+            val params = fileController.restoreObject(
+                "helperGridParams",
+                HelperGridParams::class
+            ) ?: HelperGridParams()
+            _helperGridParams.update { params }
         }
     }
 
@@ -288,7 +301,7 @@ class DrawViewModel @Inject constructor(
                 height = height,
                 color = color.toArgb()
             )
-            
+
             _drawOnBackgroundParams.update { newValue }
             fileController.saveObject(
                 key = "drawOnBackgroundParams",
@@ -404,6 +417,20 @@ class DrawViewModel @Inject constructor(
 
     fun updateDrawLineStyle(style: DrawLineStyle) {
         _drawLineStyle.update { style }
+    }
+
+    private var smartSavingJob: Job? by smartJob()
+
+    fun updateHelperGridParams(params: HelperGridParams) {
+        _helperGridParams.update { params }
+
+        smartSavingJob = viewModelScope.launch {
+            delay(200)
+            fileController.saveObject(
+                key = "helperGridParams",
+                value = params
+            )
+        }
     }
 
 }

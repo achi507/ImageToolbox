@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +73,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -89,6 +90,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.tech.imageresizershrinker.colllage_maker.presentation.viewModel.CollageMakerViewModel
 import ru.tech.imageresizershrinker.core.domain.image.model.ImageFormatGroup
+import ru.tech.imageresizershrinker.core.domain.model.DomainAspectRatio
 import ru.tech.imageresizershrinker.core.resources.R
 import ru.tech.imageresizershrinker.core.settings.presentation.provider.LocalSettingsState
 import ru.tech.imageresizershrinker.core.ui.utils.confetti.LocalConfettiHostState
@@ -104,11 +106,13 @@ import ru.tech.imageresizershrinker.core.ui.widget.buttons.BottomButtonsBlock
 import ru.tech.imageresizershrinker.core.ui.widget.buttons.EnhancedIconButton
 import ru.tech.imageresizershrinker.core.ui.widget.buttons.ShareButton
 import ru.tech.imageresizershrinker.core.ui.widget.controls.EnhancedSliderItem
-import ru.tech.imageresizershrinker.core.ui.widget.controls.selection.BackgroundColorSelector
+import ru.tech.imageresizershrinker.core.ui.widget.controls.selection.ColorRowSelector
 import ru.tech.imageresizershrinker.core.ui.widget.controls.selection.ImageFormatSelector
 import ru.tech.imageresizershrinker.core.ui.widget.controls.selection.QualitySelector
 import ru.tech.imageresizershrinker.core.ui.widget.dialogs.ExitWithoutSavingDialog
+import ru.tech.imageresizershrinker.core.ui.widget.dialogs.OneTimeImagePickingDialog
 import ru.tech.imageresizershrinker.core.ui.widget.dialogs.OneTimeSaveLocationSelectionDialog
+import ru.tech.imageresizershrinker.core.ui.widget.image.AspectRatioSelector
 import ru.tech.imageresizershrinker.core.ui.widget.image.AutoFilePicker
 import ru.tech.imageresizershrinker.core.ui.widget.image.ImageNotPickedWidget
 import ru.tech.imageresizershrinker.core.ui.widget.modifier.container
@@ -129,7 +133,7 @@ fun CollageMakerContent(
     uriState: List<Uri>?,
     onGoBack: () -> Unit,
     onNavigate: (Screen) -> Unit,
-    viewModel: CollageMakerViewModel = hiltViewModel()
+    viewModel: CollageMakerViewModel = hiltViewModel(),
 ) {
     LockScreenOrientation()
     val context = LocalContext.current as ComponentActivity
@@ -159,7 +163,7 @@ fun CollageMakerContent(
         }
     }
 
-    val pickImageLauncher = rememberImagePicker(
+    val imagePicker = rememberImagePicker(
         mode = localImagePickerMode(Picker.Multiple)
     ) { list ->
         list.takeIf { it.isNotEmpty() }?.let {
@@ -177,7 +181,7 @@ fun CollageMakerContent(
         }
     }
 
-    val pickImage = pickImageLauncher::pickImage
+    val pickImage = imagePicker::pickImage
 
     AutoFilePicker(
         onAutoPick = pickImage,
@@ -233,37 +237,9 @@ fun CollageMakerContent(
                 isLoading = false
             }
         }
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .container(
-                    color = MaterialTheme.colorScheme.surfaceContainerLow,
-                    resultPadding = 0.dp,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.collages_info),
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 14.sp,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
-            )
-        }
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
                 .container(
                     shape = RoundedCornerShape(4.dp),
                     resultPadding = 0.dp
@@ -273,7 +249,6 @@ fun CollageMakerContent(
         ) {
             Collage(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(4.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .transparencyChecker(),
@@ -283,7 +258,9 @@ fun CollageMakerContent(
                 onCollageCreated = viewModel::updateCollageBitmap,
                 backgroundColor = viewModel.backgroundColor,
                 spacing = viewModel.spacing,
-                cornerRadius = viewModel.cornerRadius
+                cornerRadius = viewModel.cornerRadius,
+                aspectRatio = 1f / viewModel.aspectRatio.value,
+                outputScaleRatio = 2f
             )
         }
     }
@@ -331,7 +308,7 @@ fun CollageMakerContent(
             )
         }
         Spacer(Modifier.height(8.dp))
-        BackgroundColorSelector(
+        ColorRowSelector(
             modifier = Modifier
                 .fillMaxWidth()
                 .container(
@@ -340,6 +317,20 @@ fun CollageMakerContent(
                 ),
             value = viewModel.backgroundColor,
             onValueChange = viewModel::setBackgroundColor
+        )
+        Spacer(Modifier.height(8.dp))
+        AspectRatioSelector(
+            selectedAspectRatio = viewModel.aspectRatio,
+            onAspectRatioChange = { aspect, _ ->
+                viewModel.setAspectRatio(aspect)
+            },
+            unselectedCardColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            aspectRatios = remember {
+                DomainAspectRatio.defaultList - setOf(
+                    DomainAspectRatio.Free,
+                    DomainAspectRatio.Original
+                )
+            }
         )
         Spacer(Modifier.height(8.dp))
         EnhancedSliderItem(
@@ -459,6 +450,9 @@ fun CollageMakerContent(
         var showFolderSelectionDialog by rememberSaveable {
             mutableStateOf(false)
         }
+        var showOneTimeImagePickingDialog by rememberSaveable {
+            mutableStateOf(false)
+        }
         BottomButtonsBlock(
             targetState = (viewModel.uris.isNullOrEmpty()) to isPortrait,
             onSecondaryButtonClick = pickImage,
@@ -470,6 +464,9 @@ fun CollageMakerContent(
             },
             actions = {
                 if (isPortrait) actions()
+            },
+            onSecondaryButtonLongClick = {
+                showOneTimeImagePickingDialog = true
             }
         )
         if (showFolderSelectionDialog) {
@@ -479,6 +476,12 @@ fun CollageMakerContent(
                 formatForFilenameSelection = viewModel.getFormatForFilenameSelection()
             )
         }
+        OneTimeImagePickingDialog(
+            onDismiss = { showOneTimeImagePickingDialog = false },
+            picker = Picker.Multiple,
+            imagePicker = imagePicker,
+            visible = showOneTimeImagePickingDialog
+        )
     }
 
     val noDataControls: @Composable () -> Unit = {
@@ -577,10 +580,50 @@ fun CollageMakerContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .padding(20.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(20.dp)
                     ) {
-                        collagePreview()
+                        var bottomPadding by remember {
+                            mutableStateOf(0.dp)
+                        }
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(
+                                    bottom = bottomPadding
+                                )
+                        ) {
+                            collagePreview()
+                        }
+                        val density = LocalDensity.current
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .container(
+                                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                                    resultPadding = 0.dp,
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .onGloballyPositioned {
+                                    bottomPadding = with(density) { it.size.height.toDp() + 20.dp }
+                                }
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.collages_info),
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.SemiBold,
+                                lineHeight = 14.sp,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
+                            )
+                        }
                     }
                 }
             }
@@ -588,8 +631,6 @@ fun CollageMakerContent(
     }
 
     BackHandler(onBack = onBack)
-
-
 
     ExitWithoutSavingDialog(
         onExit = onGoBack,
