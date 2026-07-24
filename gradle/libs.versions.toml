@@ -9,7 +9,7 @@ versionCode = "260"
 
 jvmTarget = "21"
 
-imageToolboxLibs = "7.7.2"
+imageToolboxLibs = "7.8.0"
 trickle = "1.9.2"
 evaluator = "1.0.0"
 quickie = "1.19.0"
@@ -38,7 +38,7 @@ detektCompose = "0.6.3"
 decompose = "3.5.0"
 
 kotlin = "2.4.10"
-agp = "9.3.0"
+agp = "9.3.1"
 hilt = "2.60.1"
 gms = "4.5.0"
 
