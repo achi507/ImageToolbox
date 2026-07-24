@@ -213,6 +213,20 @@ object ImageUtils {
             is MetadataTag.Rw2SensorRightBorder -> R.string.tag_rw2_sensor_right_border
             is MetadataTag.Rw2SensorTopBorder -> R.string.tag_rw2_sensor_top_border
             is MetadataTag.Rw2Iso -> R.string.tag_rw2_iso
+            is MetadataTag.CameraFirmware -> R.string.tag_camera_firmware
+            is MetadataTag.ChromaticAberrationCorrection -> R.string.tag_chromatic_aberration_correction
+            is MetadataTag.DevelopmentType -> R.string.tag_development_type
+            is MetadataTag.DevelopmentTypeDescription -> R.string.tag_development_type_description
+            is MetadataTag.DistortionCorrection -> R.string.tag_distortion_correction
+            is MetadataTag.ImageEditingSoftware -> R.string.tag_image_editing_software
+            is MetadataTag.ImageEditor -> R.string.tag_image_editor
+            is MetadataTag.ImageTitle -> R.string.tag_image_title
+            is MetadataTag.LearningOptOutIn -> R.string.tag_learning_opt_out_in
+            is MetadataTag.MetadataEditingSoftware -> R.string.tag_metadata_editing_software
+            is MetadataTag.NoiseReduction -> R.string.tag_noise_reduction
+            is MetadataTag.Photographer -> R.string.tag_photographer
+            is MetadataTag.RawDevelopingSoftware -> R.string.tag_raw_developing_software
+            is MetadataTag.ShadingCorrection -> R.string.tag_shading_correction
         }
 
     val MetadataTag.localizedName: String

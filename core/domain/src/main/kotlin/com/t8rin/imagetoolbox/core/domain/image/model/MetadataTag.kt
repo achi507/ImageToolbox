@@ -58,6 +58,7 @@ sealed class MetadataTag(
     object CompressedBitsPerPixel : MetadataTag(TAG_COMPRESSED_BITS_PER_PIXEL)
     object MakerNote : MetadataTag(TAG_MAKER_NOTE)
     object UserComment : MetadataTag(TAG_USER_COMMENT)
+    object LearningOptOutIn : MetadataTag(TAG_LEARNING_OPT_OUT_IN)
     object RelatedSoundFile : MetadataTag(TAG_RELATED_SOUND_FILE)
     object DatetimeOriginal : MetadataTag(TAG_DATETIME_ORIGINAL)
     object DatetimeDigitized : MetadataTag(TAG_DATETIME_DIGITIZED)
@@ -111,6 +112,14 @@ sealed class MetadataTag(
     object Sharpness : MetadataTag(TAG_SHARPNESS)
     object DeviceSettingDescription : MetadataTag(TAG_DEVICE_SETTING_DESCRIPTION)
     object SubjectDistanceRange : MetadataTag(TAG_SUBJECT_DISTANCE_RANGE)
+    object DevelopmentType : MetadataTag(TAG_DEVELOPMENT_TYPE)
+    object DevelopmentTypeDescription : MetadataTag(TAG_DEVELOPMENT_TYPE_DESCRIPTION)
+    object DistortionCorrection : MetadataTag(TAG_DISTORTION_CORRECTION)
+    object ChromaticAberrationCorrection :
+        MetadataTag(TAG_CHROMATIC_ABERRATION_CORRECTION)
+
+    object ShadingCorrection : MetadataTag(TAG_SHADING_CORRECTION)
+    object NoiseReduction : MetadataTag(TAG_NOISE_REDUCTION)
     object ImageUniqueId : MetadataTag(TAG_IMAGE_UNIQUE_ID)
     object CameraOwnerName : MetadataTag(TAG_CAMERA_OWNER_NAME)
     object BodySerialNumber : MetadataTag(TAG_BODY_SERIAL_NUMBER)
@@ -118,6 +127,13 @@ sealed class MetadataTag(
     object LensMake : MetadataTag(TAG_LENS_MAKE)
     object LensModel : MetadataTag(TAG_LENS_MODEL)
     object LensSerialNumber : MetadataTag(TAG_LENS_SERIAL_NUMBER)
+    object ImageTitle : MetadataTag(TAG_IMAGE_TITLE)
+    object Photographer : MetadataTag(TAG_PHOTOGRAPHER)
+    object ImageEditor : MetadataTag(TAG_IMAGE_EDITOR)
+    object CameraFirmware : MetadataTag(TAG_CAMERA_FIRMWARE)
+    object RawDevelopingSoftware : MetadataTag(TAG_RAW_DEVELOPING_SOFTWARE)
+    object ImageEditingSoftware : MetadataTag(TAG_IMAGE_EDITING_SOFTWARE)
+    object MetadataEditingSoftware : MetadataTag(TAG_METADATA_EDITING_SOFTWARE)
     object GpsVersionId : MetadataTag(TAG_GPS_VERSION_ID)
     object GpsLatitudeRef : MetadataTag(TAG_GPS_LATITUDE_REF)
     object GpsLatitude : MetadataTag(TAG_GPS_LATITUDE)
@@ -210,6 +226,7 @@ sealed class MetadataTag(
         const val TAG_COMPRESSED_BITS_PER_PIXEL: String = "CompressedBitsPerPixel"
         const val TAG_MAKER_NOTE: String = "MakerNote"
         const val TAG_USER_COMMENT: String = "UserComment"
+        const val TAG_LEARNING_OPT_OUT_IN: String = "LearningOptOutIn"
         const val TAG_RELATED_SOUND_FILE: String = "RelatedSoundFile"
         const val TAG_DATETIME_ORIGINAL: String = "DateTimeOriginal"
         const val TAG_DATETIME_DIGITIZED: String = "DateTimeDigitized"
@@ -263,6 +280,14 @@ sealed class MetadataTag(
         const val TAG_SHARPNESS: String = "Sharpness"
         const val TAG_DEVICE_SETTING_DESCRIPTION: String = "DeviceSettingDescription"
         const val TAG_SUBJECT_DISTANCE_RANGE: String = "SubjectDistanceRange"
+        const val TAG_DEVELOPMENT_TYPE: String = "DevelopmentType"
+        const val TAG_DEVELOPMENT_TYPE_DESCRIPTION: String =
+            "DevelopmentTypeDescription"
+        const val TAG_DISTORTION_CORRECTION: String = "DistortionCorrection"
+        const val TAG_CHROMATIC_ABERRATION_CORRECTION: String =
+            "ChromaticAberrationCorrection"
+        const val TAG_SHADING_CORRECTION: String = "ShadingCorrection"
+        const val TAG_NOISE_REDUCTION: String = "NoiseReduction"
         const val TAG_IMAGE_UNIQUE_ID: String = "ImageUniqueID"
         const val TAG_CAMERA_OWNER_NAME: String = "CameraOwnerName"
         const val TAG_BODY_SERIAL_NUMBER: String = "BodySerialNumber"
@@ -270,6 +295,14 @@ sealed class MetadataTag(
         const val TAG_LENS_MAKE: String = "LensMake"
         const val TAG_LENS_MODEL: String = "LensModel"
         const val TAG_LENS_SERIAL_NUMBER: String = "LensSerialNumber"
+        const val TAG_IMAGE_TITLE: String = "ImageTitle"
+        const val TAG_PHOTOGRAPHER: String = "Photographer"
+        const val TAG_IMAGE_EDITOR: String = "ImageEditor"
+        const val TAG_CAMERA_FIRMWARE: String = "CameraFirmware"
+        const val TAG_RAW_DEVELOPING_SOFTWARE: String = "RAWDevelopingSoftware"
+        const val TAG_IMAGE_EDITING_SOFTWARE: String = "ImageEditingSoftware"
+        const val TAG_METADATA_EDITING_SOFTWARE: String =
+            "MetadataEditingSoftware"
         const val TAG_GPS_VERSION_ID: String = "GPSVersionID"
         const val TAG_GPS_LATITUDE_REF: String = "GPSLatitudeRef"
         const val TAG_GPS_LATITUDE: String = "GPSLatitude"
@@ -352,6 +385,7 @@ sealed class MetadataTag(
                 CompressedBitsPerPixel,
                 MakerNote,
                 UserComment,
+                LearningOptOutIn,
                 RelatedSoundFile,
                 DatetimeOriginal,
                 DatetimeDigitized,
@@ -405,6 +439,12 @@ sealed class MetadataTag(
                 Sharpness,
                 DeviceSettingDescription,
                 SubjectDistanceRange,
+                DevelopmentType,
+                DevelopmentTypeDescription,
+                DistortionCorrection,
+                ChromaticAberrationCorrection,
+                ShadingCorrection,
+                NoiseReduction,
                 ImageUniqueId,
                 CameraOwnerName,
                 BodySerialNumber,
@@ -412,6 +452,13 @@ sealed class MetadataTag(
                 LensMake,
                 LensModel,
                 LensSerialNumber,
+                ImageTitle,
+                Photographer,
+                ImageEditor,
+                CameraFirmware,
+                RawDevelopingSoftware,
+                ImageEditingSoftware,
+                MetadataEditingSoftware,
                 GpsVersionId,
                 GpsLatitudeRef,
                 GpsLatitude,

@@ -4472,4 +4472,18 @@
     <string name="gmic_param_quantized_orientations">Quantized Orientations</string>
     <string name="score">Score</string>
     <string name="read_only">Read Only</string>
+    <string name="tag_camera_firmware">Camera firmware</string>
+    <string name="tag_chromatic_aberration_correction">Chromatic aberration correction</string>
+    <string name="tag_development_type">Development type</string>
+    <string name="tag_development_type_description">Development type description</string>
+    <string name="tag_distortion_correction">Distortion correction</string>
+    <string name="tag_image_editing_software">Image editing software</string>
+    <string name="tag_image_editor">Image editor</string>
+    <string name="tag_image_title">Image title</string>
+    <string name="tag_learning_opt_out_in">Learning opt-out/in</string>
+    <string name="tag_metadata_editing_software">Metadata editing software</string>
+    <string name="tag_noise_reduction">Noise reduction</string>
+    <string name="tag_photographer">Photographer</string>
+    <string name="tag_raw_developing_software">RAW developing software</string>
+    <string name="tag_shading_correction">Shading correction</string>
 </resources>

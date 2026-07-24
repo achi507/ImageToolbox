@@ -637,9 +637,30 @@ class MetadataRoundTripInstrumentedTest {
                     "0/1,255/1,128/1,255/1,128/1,255/1",
 
             MetadataTag.Datetime to "2026:07:24 12:34:56",
-            MetadataTag.ExifVersion to "0232",
+            // Exif 3.x tags below require the serialized ExifVersion to be 0300.
+            MetadataTag.ExifVersion to "0300",
             MetadataTag.FlashpixVersion to "0100",
             MetadataTag.UserComment to "ImageToolbox custom metadata comment",
+
+            // Exif 3.0/3.1 tags.
+            MetadataTag.LearningOptOutIn to "0,2,1,1,2,0,3,2,4,0",
+            MetadataTag.DevelopmentType to "1,2",
+            MetadataTag.DevelopmentTypeDescription to
+                    "ImageToolbox custom development description",
+            MetadataTag.DistortionCorrection to "1",
+            MetadataTag.ChromaticAberrationCorrection to "1",
+            MetadataTag.ShadingCorrection to "1",
+            MetadataTag.NoiseReduction to "1",
+            MetadataTag.ImageTitle to "ImageToolbox custom image title",
+            MetadataTag.Photographer to "ImageToolbox custom photographer",
+            MetadataTag.ImageEditor to "ImageToolbox custom image editor",
+            MetadataTag.CameraFirmware to "ImageToolbox custom camera firmware",
+            MetadataTag.RawDevelopingSoftware to
+                    "ImageToolbox custom RAW developing software",
+            MetadataTag.ImageEditingSoftware to
+                    "ImageToolbox custom image editing software",
+            MetadataTag.MetadataEditingSoftware to
+                    "ImageToolbox custom metadata editing software",
             MetadataTag.DatetimeOriginal to "2026:07:23 10:11:12",
             MetadataTag.DatetimeDigitized to "2026:07:22 09:08:07",
             MetadataTag.OffsetTime to "+03:00",
